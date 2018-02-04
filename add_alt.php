@@ -5,7 +5,7 @@ $desc = trim(base64_decode(base64_decode(file_get_contents($argv[3]))));
 $rank = $argv[4];
 
 if(!is_numeric($rank)) {
-    die('Rank Error');
+    //die('Rank Error');
 }
 
 if(strtolower(substr($url, 0, 4)) != 'http') die('2');
@@ -27,7 +27,7 @@ $show_results = mysql_query("SELECT * FROM search WHERE url LIKE '".mysql_real_e
 $number = mysql_numrows($show_results);
 $i = 0;
 if($number == 0) {
-        $add_results = mysql_query("INSERT INTO search VALUES ('','".mysql_real_escape_string($url)."', '".htmlentities(mysql_real_escape_string($title))."', '".htmlentities(mysql_real_escape_string($desc))."', '0', '".$rank."')");
+        $add_results = mysql_query("INSERT INTO search (url, title, description, clicks, rank) VALUES ('".mysql_real_escape_string($url)."', '".htmlentities(mysql_real_escape_string($title))."', '".htmlentities(mysql_real_escape_string($desc))."', '0', '".$rank."')");
         echo '1';
 } else {
         echo '2';

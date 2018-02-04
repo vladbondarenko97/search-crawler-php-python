@@ -1,6 +1,5 @@
 <?php
 
-
 $arg1 = $argv[1];
 $arg2 = $argv[2];
 if(strtolower($arg1) == 'truncate') {

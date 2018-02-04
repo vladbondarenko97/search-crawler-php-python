@@ -1,6 +1,7 @@
 import sys
 from urlparse import urlparse
 
+
 penalty_ext = ['ga','tk','ml','cf','free']
 good_ext = ['com', 'net', 'org']
 important_ext = ['gov','mil','edu']
@@ -59,4 +60,4 @@ rank = str(rank)
 if '.' in rank:
     rank = rank.split('.')
     rank = rank[0]
-print rank
+print '0'#rank

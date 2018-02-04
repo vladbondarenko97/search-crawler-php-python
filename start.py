@@ -4,13 +4,13 @@ import urllib2
 import subprocess
 import urlparse
 import nltk
-import sys  
-reload(sys)  
+import sys
+reload(sys)
 sys.setdefaultencoding('utf8')
 from bs4 import BeautifulSoup
 
-os.system('clear')
-url_list = ['https://www.reddit.com/']
+os.system('cls')
+url_list = ['https://en.wikipedia.org/wiki/Islamic_State_of_Iraq_and_the_Levant']
 
 print '-----------------------'
 print ' Claw Search 0.5 beta'
@@ -32,8 +32,8 @@ if url_final is not url_list[0]:
     print '>> [INFO] Redirect to (%s)' % (url_final)
 
 url_html = response.read()
-soup = BeautifulSoup(url_html)
-    
+soup = BeautifulSoup(url_html, "html.parser")
+
 # URL info
 url_final = base64.b64encode(url_final)
 url_title = base64.b64encode(soup.title.string)
@@ -48,8 +48,7 @@ lines = (line.strip() for line in url_text.splitlines())
 chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
 # drop blank lines
 url_text = '\n'.join(chunk for chunk in chunks if chunk)
-url_text = base64.b64encode(re.sub(r'(\r\n.?)+', r'\r\n', url_text))
-print base64.b64decode(url_text)
+##url_text = base64.b64encode(re.sub(r'(\r\n.?)+', r'\r\n', url_text))
 
 safe_title = soup.title.string
 if '"' in safe_title:
@@ -84,11 +83,12 @@ for link in soup.find_all('a'):
     except:
         continue
 nol = str(n)
-rank = subprocess.check_output("python rank.py "+base64.b64decode(url_final)+" \""+base64.b64decode(url_title)+"\" "+nol, shell=True)
+rank = '0'#subprocess.check_output("python rank.py "+base64.b64decode(url_final)+" \""+base64.b64decode(url_title)+"\" "+nol, shell=True)
 print '>> [INFO] Rank is %s.' % (rank)
 print '>> [INFO] Adding URL to the database.'
+print 'Rank: ' + rank
 try:
-    addDB = subprocess.check_output("php add.php '" + url_final + "' '" + url_title + "' '" + url_text + "' "+rank, shell=True)
+    addDB = subprocess.check_output("php add.php '" + url_final + "' '" + url_title + "' '" + url_text + "' "+ rank, shell=True)
 except:
     print '>> [WARNING] Page is too large. Using alternative method of adding.'
     f = open('./temp/'+url_final[:5]+'.txt', 'w')
@@ -138,8 +138,8 @@ while len(future_url) > 0:
         url_list.append(future_url)
 
     url_html = response.read()
-    soup = BeautifulSoup(url_html)
-    
+    soup = BeautifulSoup(url_html, "html.parser")
+
     # URL info
     url_final = base64.b64encode(url_final)
     try:
@@ -153,7 +153,7 @@ while len(future_url) > 0:
         safe_title = safe_title.relplace('"', "'")
     print '>> [INFO] Cleaning HTML.'
     #url_text = base64.b64encode(nltk.clean_html(url_html))
-	
+
 	#CLEAN HTML
     for script in soup(["script", "style"]):
         script.extract()
@@ -164,7 +164,7 @@ while len(future_url) > 0:
     # drop blank lines
     url_text = '\n'.join(chunk for chunk in chunks if chunk)
     url_text = base64.b64encode(url_text)
-	
+
 	#Get links
     print '>> [INFO] Extracting links...'
     n=0
@@ -210,7 +210,7 @@ while len(future_url) > 0:
         except:
             continue
     nol = str(n)
-    rank = subprocess.check_output("python rank.py "+base64.b64decode(url_final)+" \""+base64.b64decode(url_title)+"\" "+nol, shell=True)
+    rank = '0'#subprocess.check_output("python rank.py "+base64.b64decode(url_final)+" \""+base64.b64decode(url_title)+"\" "+nol, shell=True)
     print '>> [INFO] Rank is %s.' % (rank)
     print '>> [INFO] Adding URL to the database.'
     try:
